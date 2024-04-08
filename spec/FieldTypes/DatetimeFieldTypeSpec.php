@@ -18,6 +18,7 @@ use Prophecy\Argument;
 use Sylius\Component\Grid\DataExtractor\DataExtractorInterface;
 use Sylius\Component\Grid\Definition\Field;
 use Sylius\Component\Grid\FieldTypes\FieldTypeInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 final class DatetimeFieldTypeSpec extends ObjectBehavior
 {
@@ -71,6 +72,20 @@ final class DatetimeFieldTypeSpec extends ObjectBehavior
             'format' => '',
             'timezone' => null,
         ])->shouldReturn('');
+    }
+
+    function it_uses_timezone_parameter_as_default_timezone_option(
+        DataExtractorInterface $dataExtractor,
+        OptionsResolver $resolver,
+    ): void {
+        $this->beConstructedWith($dataExtractor, 'Europe/Warsaw');
+
+        $resolver->setDefault('format', 'Y-m-d H:i:s')->willReturn($resolver)->shouldBeCalled();
+        $resolver->setAllowedTypes('format', 'string')->willReturn($resolver)->shouldBeCalled();
+        $resolver->setDefault('timezone', 'Europe/Warsaw')->willReturn($resolver)->shouldBeCalled();
+        $resolver->setAllowedTypes('timezone', ['null', 'string'])->willReturn($resolver)->shouldBeCalled();
+
+        $this->configureOptions($resolver);
     }
 
     function it_throws_exception_if_returned_value_is_not_datetime(DataExtractorInterface $dataExtractor, Field $field): void
