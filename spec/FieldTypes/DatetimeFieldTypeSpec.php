@@ -51,7 +51,7 @@ final class DatetimeFieldTypeSpec extends ObjectBehavior
     function it_sets_timezone_if_specified(
         DataExtractorInterface $dataExtractor,
         \DateTime $dateTime,
-        Field $field
+        Field $field,
     ): void {
         $dataExtractor->get($field, ['foo' => 'bar'])->willReturn($dateTime);
 
