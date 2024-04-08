@@ -35,6 +35,7 @@
         "symfony/deprecation-contracts": "^2.2",
         "symfony/event-dispatcher": "^5.4 || ^6.0",
         "symfony/http-kernel": "^5.4 || ^6.0",
+        "symfony/options-resolver": "^5.4 || ^6.0",
         "webmozart/assert": "^1.9"
     },
     "require-dev": {

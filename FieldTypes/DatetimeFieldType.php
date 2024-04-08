@@ -37,7 +37,12 @@ final class DatetimeFieldType implements FieldTypeInterface
             return '';
         }
 
+        /** @var \DateTimeImmutable|\DateTime $value */
         Assert::isInstanceOf($value, \DateTimeInterface::class);
+
+        if (null !== $options['timezone']) {
+            $value = $value->setTimezone(new \DateTimeZone($options['timezone']));
+        }
 
         return $value->format($options['format']);
     }
@@ -46,5 +51,7 @@ final class DatetimeFieldType implements FieldTypeInterface
     {
         $resolver->setDefault('format', 'Y-m-d H:i:s');
         $resolver->setAllowedTypes('format', 'string');
+        $resolver->setDefault('timezone', null);
+        $resolver->setAllowedTypes('timezone', ['null', 'string']);
     }
 }

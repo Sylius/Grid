@@ -14,6 +14,7 @@ declare(strict_types=1);
 namespace spec\Sylius\Component\Grid\FieldTypes;
 
 use PhpSpec\ObjectBehavior;
+use Prophecy\Argument;
 use Sylius\Component\Grid\DataExtractor\DataExtractorInterface;
 use Sylius\Component\Grid\Definition\Field;
 use Sylius\Component\Grid\FieldTypes\FieldTypeInterface;
@@ -37,11 +38,29 @@ final class DatetimeFieldTypeSpec extends ObjectBehavior
     ): void {
         $dataExtractor->get($field, ['foo' => 'bar'])->willReturn($dateTime);
 
+        $dateTime->setTimezone(Argument::any())->shouldNotBeCalled();
         $dateTime->format('Y-m-d')->willReturn('2001-10-10');
 
         $this->render($field, ['foo' => 'bar'], [
             'format' => 'Y-m-d',
+            'timezone' => null,
         ])->shouldReturn('2001-10-10');
+    }
+
+    function it_sets_timezone_if_specified(
+        DataExtractorInterface $dataExtractor,
+        \DateTime $dateTime,
+        Field $field
+    ): void {
+        $dataExtractor->get($field, ['foo' => 'bar'])->willReturn($dateTime);
+
+        $dateTime->setTimezone(new \DateTimeZone('Europe/Warsaw'))->willReturn($dateTime);
+        $dateTime->format('Y-m-d H:i:s')->willReturn('2021-10-10 00:00:00');
+
+        $this->render($field, ['foo' => 'bar'], [
+            'format' => 'Y-m-d H:i:s',
+            'timezone' => 'Europe/Warsaw',
+        ])->shouldReturn('2021-10-10 00:00:00');
     }
 
     function it_returns_null_if_property_accessor_returns_null(DataExtractorInterface $dataExtractor, Field $field): void
@@ -50,6 +69,7 @@ final class DatetimeFieldTypeSpec extends ObjectBehavior
 
         $this->render($field, ['foo' => 'bar'], [
             'format' => '',
+            'timezone' => null,
         ])->shouldReturn('');
     }
 
@@ -61,6 +81,7 @@ final class DatetimeFieldTypeSpec extends ObjectBehavior
             ->shouldThrow(\InvalidArgumentException::class)
             ->during('render', [$field, ['foo' => 'bar'], [
                 'format' => '',
+                'timezone' => null,
             ]])
         ;
     }
