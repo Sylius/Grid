@@ -28,7 +28,7 @@
         }
     ],
     "require": {
-        "php": "^8.0",
+        "php": "^8.1",
         "sylius-labs/polyfill-symfony-event-dispatcher": "^1.0",
         "sylius/registry": "^1.5",
         "symfony/config": "^5.4 || ^6.4 || ^7.0",
