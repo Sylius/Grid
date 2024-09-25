@@ -30,7 +30,7 @@ final class SessionFilterStorage implements FilterStorageInterface
 
     public function all(): array
     {
-        return $this->getSession()->get('filters', []);
+        return $this->getSession()->all()['filters'] ?? [];
     }
 
     public function hasFilters(): bool
