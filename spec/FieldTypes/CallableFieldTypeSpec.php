@@ -18,7 +18,7 @@ use Sylius\Component\Grid\DataExtractor\DataExtractorInterface;
 use Sylius\Component\Grid\Definition\Field;
 use Sylius\Component\Grid\FieldTypes\FieldTypeInterface;
 
-final class CallbackFieldTypeSpec extends ObjectBehavior
+final class CallableFieldTypeSpec extends ObjectBehavior
 {
     function let(DataExtractorInterface $dataExtractor): void
     {
@@ -30,50 +30,50 @@ final class CallbackFieldTypeSpec extends ObjectBehavior
         $this->shouldImplement(FieldTypeInterface::class);
     }
 
-    function it_uses_data_extractor_to_obtain_data_and_passes_it_to_a_callback_with_htmlspecialchars(
+    function it_uses_data_extractor_to_obtain_data_and_passes_it_to_a_callable_with_htmlspecialchars(
         DataExtractorInterface $dataExtractor,
         Field $field,
     ): void {
         $dataExtractor->get($field, ['foo' => 'bar'])->willReturn('bar');
 
         $this->render($field, ['foo' => 'bar'], [
-            'callback' => fn (string $value): string => "<strong>$value</strong>",
+            'callable' => fn (string $value): string => "<strong>$value</strong>",
             'htmlspecialchars' => true,
         ])->shouldReturn('&lt;strong&gt;bar&lt;/strong&gt;');
     }
 
-    function it_uses_data_extractor_to_obtain_data_and_passes_it_to_a_callback_without_htmlspecialchars(
+    function it_uses_data_extractor_to_obtain_data_and_passes_it_to_a_callable_without_htmlspecialchars(
         DataExtractorInterface $dataExtractor,
         Field $field,
     ): void {
         $dataExtractor->get($field, ['foo' => 'bar'])->willReturn('bar');
 
         $this->render($field, ['foo' => 'bar'], [
-            'callback' => fn (string $value): string => "<strong>$value</strong>",
+            'callable' => fn (string $value): string => "<strong>$value</strong>",
             'htmlspecialchars' => false,
         ])->shouldReturn('<strong>bar</strong>');
     }
 
-    function it_uses_data_extractor_to_obtain_data_and_passes_it_to_a_function_callback(
+    function it_uses_data_extractor_to_obtain_data_and_passes_it_to_a_function_callable(
         DataExtractorInterface $dataExtractor,
         Field $field,
     ): void {
         $dataExtractor->get($field, ['foo' => 'bar'])->willReturn('bar');
 
         $this->render($field, ['foo' => 'bar'], [
-            'callback' => 'strtoupper',
+            'callable' => 'strtoupper',
             'htmlspecialchars' => true,
         ])->shouldReturn('BAR');
     }
 
-    function it_uses_data_extractor_to_obtain_data_and_passes_it_to_a_static_callback(
+    function it_uses_data_extractor_to_obtain_data_and_passes_it_to_a_static_callable(
         DataExtractorInterface $dataExtractor,
         Field $field,
     ): void {
         $dataExtractor->get($field, ['foo' => 'bar'])->willReturn('BAR');
 
         $this->render($field, ['foo' => 'bar'], [
-            'callback' => [self::class, 'callable'],
+            'callable' => [self::class, 'callable'],
             'htmlspecialchars' => true,
         ])->shouldReturn('bar');
     }

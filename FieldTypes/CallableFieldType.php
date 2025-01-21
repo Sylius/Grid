@@ -17,7 +17,7 @@ use Sylius\Component\Grid\DataExtractor\DataExtractorInterface;
 use Sylius\Component\Grid\Definition\Field;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-final class CallbackFieldType implements FieldTypeInterface
+final class CallableFieldType implements FieldTypeInterface
 {
     public function __construct(private DataExtractorInterface $dataExtractor)
     {
@@ -26,7 +26,7 @@ final class CallbackFieldType implements FieldTypeInterface
     public function render(Field $field, $data, array $options): string
     {
         $value = $this->dataExtractor->get($field, $data);
-        $value = (string) call_user_func($options['callback'], $value);
+        $value = (string) call_user_func($options['callable'], $value);
 
         if ($options['htmlspecialchars']) {
             $value = htmlspecialchars($value);
@@ -37,8 +37,8 @@ final class CallbackFieldType implements FieldTypeInterface
 
     public function configureOptions(OptionsResolver $resolver): void
     {
-        $resolver->setRequired('callback');
-        $resolver->setAllowedTypes('callback', 'callable');
+        $resolver->setRequired('callable');
+        $resolver->setAllowedTypes('callable', 'callable');
 
         $resolver->setDefault('htmlspecialchars', true);
         $resolver->setAllowedTypes('htmlspecialchars', 'bool');
