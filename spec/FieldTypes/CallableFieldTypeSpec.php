@@ -78,6 +78,25 @@ final class CallableFieldTypeSpec extends ObjectBehavior
         ])->shouldReturn('bar');
     }
 
+    function it_throws_an_exception_when_a_callable_return_value_cannot_be_casted_to_string(
+        DataExtractorInterface $dataExtractor,
+        Field $field,
+    ): void {
+        $field->getName()->willReturn('id');
+        $dataExtractor->get($field, ['foo' => 'bar'])->willReturn('BAR');
+
+        $this
+            ->shouldThrow(\RuntimeException::class)
+            ->during('render', [
+                $field,
+                ['foo' => 'bar'],
+                [
+                    'callable' => fn () => new \stdclass(),
+                    'htmlspecialchars' => true,
+                ],
+            ]);
+    }
+
     static function callable(mixed $value): string
     {
         return strtolower($value);

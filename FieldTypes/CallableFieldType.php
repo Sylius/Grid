@@ -26,7 +26,13 @@ final class CallableFieldType implements FieldTypeInterface
     public function render(Field $field, $data, array $options): string
     {
         $value = $this->dataExtractor->get($field, $data);
-        $value = (string) call_user_func($options['callable'], $value);
+        $value = call_user_func($options['callable'], $value);
+
+        try {
+            $value = (string) $value;
+        } catch (\Throwable $e) {
+            throw new \RuntimeException(\sprintf('The callback for field "%s" returned a value that could not be converted to string.', $field->getName()));
+        }
 
         if ($options['htmlspecialchars']) {
             $value = htmlspecialchars($value);
