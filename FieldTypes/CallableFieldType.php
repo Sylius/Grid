@@ -30,7 +30,7 @@ final class CallableFieldType implements FieldTypeInterface
 
         try {
             $value = (string) $value;
-        } catch (\Throwable $e) {
+        } catch (\Throwable) {
             throw new \RuntimeException(\sprintf('The callback for field "%s" returned a value that could not be converted to string.', $field->getName()));
         }
 
