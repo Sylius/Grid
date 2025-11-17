@@ -13,9 +13,7 @@ declare(strict_types=1);
 
 namespace Sylius\Component\Grid\Tests\Dummy;
 
-use Sylius\Component\Resource\Model\ResourceInterface;
-
-final class Bar implements ResourceInterface
+final class Bar
 {
     public function getId(): ?int
     {
