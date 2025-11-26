@@ -11,12 +11,9 @@
 
 declare(strict_types=1);
 
-namespace Sylius\Component\Grid\Definition;
+namespace Sylius\Component\Grid\Tests\Dummy;
 
-interface ArrayToDefinitionConverterInterface
+enum TestEnum: string
 {
-    /**
-     * @param array<string, mixed> $configuration
-     */
-    public function convert(string $code, array $configuration): Grid;
+    case A = 'a';
 }
